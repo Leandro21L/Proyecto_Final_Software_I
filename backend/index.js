@@ -9,8 +9,8 @@ app.use(express.json());
 // Configura la conexión a MySQL
 const db = mysql.createConnection({
   host: 'localhost',
-  user: 'tu_usuario',
-  password: 'tu_contraseña',
+  user: 'db_user',
+  password: 'pass',
   database: 'furniture_inventory'
 });
 
@@ -22,7 +22,7 @@ db.connect((err) => {
   }
 });
 
-// Ejemplo de endpoint
+// Ejemplo de endpoin
 app.get('/api/inventory', (req, res) => {
   db.query('SELECT * FROM inventory', (err, results) => {
     if (err) {
@@ -30,6 +30,53 @@ app.get('/api/inventory', (req, res) => {
     } else {
       res.json(results);
     }
+  });
+});
+
+//Inserta nuevo registro en la db
+app.post('/api/inventory', (req, res) => {
+  const data = req.body;
+  db.query('INSERT INTO inventory (name, quantity, type, threshold) VALUES (?, ?, ?, ?)', 
+    [data.name, data.quantity, data.type, data.threshold],
+    (err, results) => {
+    if (err) {
+      console.error('Error al insertar datos:', err);
+      res.status(500).send('Error al insertar datos');
+      return;
+    }
+    res.status(201).send('Datos insertados correctamente');
+  });
+});
+
+//Actualiza/editar registro por id
+app.put('/api/inventory/:id', (req, res) => {
+  const data = req.body;
+  const id = req.params.id;
+  db.query('UPDATE inventory SET name = ?, quantity = ?, type = ?, threshold = ? WHERE id = ?', 
+    [data.name, data.quantity, data.type, data.threshold, id],
+    (err, results) => {
+    if (err) {
+      console.error('Error al editar datos:', err);
+      res.status(500).send('Error al editar datos');
+      return;
+    }
+    res.status(201).send('Datos editados correctamente');
+  });
+});
+
+//Ajuste manual de cantidad
+app.put('/api/inventory/quantity/:id', (req, res) => {
+  const data = req.body;
+  const id = req.params.id;
+  db.query('UPDATE inventory SET quantity = ? WHERE id = ?', 
+    [data.quantity, id],
+    (err, results) => {
+    if (err) {
+      console.error('Error al editar datos:', err);
+      res.status(500).send('Error al editar datos');
+      return;
+    }
+    res.status(201).send('Datos editados correctamente');
   });
 });
 
