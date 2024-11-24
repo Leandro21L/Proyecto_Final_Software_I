@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import RegisterForm from "./components/RegisterForm";
+import Login from './components/Login';
 import InventoryList from './components/InventoryList';
 import AddItemForm from './components/AddItemForm';
 import EditItemForm from './components/EditItemForm';
@@ -9,8 +12,23 @@ function App() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Función para cargar el inventario
+  const checkAuth = () => {
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+  };
+
+  useEffect(() => {
+    checkAuth();
+    if (isAuthenticated) loadInventory();
+  }, [isAuthenticated]);
+
   const loadInventory = async () => {
     try {
       setLoading(true);
@@ -25,65 +43,68 @@ function App() {
     }
   };
 
-  // Cargar inventario al montar el componente
-  useEffect(() => {
-    loadInventory();
-  }, []);
-
-  // Función para manejar la adición de un nuevo item
-  const handleAdd = () => {
-    loadInventory(); // Recargar el inventario después de añadir
-  };
-
-  // Función para manejar la edición
-  const handleEdit = (item) => {
-    setSelectedItem(item);
-  };
-
-  // Función después de completar la edición
-  const handleEditComplete = () => {
-    setSelectedItem(null);
-    loadInventory(); // Recargar el inventario después de editar
-  };
-
-  // Función para ajustar la cantidad
-  const handleAdjust = (item) => {
-    // Implementar lógica para ajustar cantidad
-    console.log('Ajustando cantidad para:', item);
-  };
-
-  return (
+  const AuthContent = () => (
     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+      <button 
+        onClick={logout} 
+        style={{ 
+          float: 'right', 
+          padding: '8px 16px', 
+          backgroundColor: '#dc3545', 
+          color: 'white', 
+          border: 'none', 
+          borderRadius: '4px', 
+          cursor: 'pointer' 
+        }}
+      >
+        Cerrar Sesión
+      </button>
       <h1>Gestión de Inventario</h1>
-      
       <div style={{ marginBottom: '20px' }}>
-        <AddItemForm onAdd={handleAdd} />
+        <AddItemForm onAdd={loadInventory} />
       </div>
-
-      {error && (
-        <div style={{ color: 'red', marginBottom: '20px' }}>
-          {error}
-        </div>
-      )}
-
+      {error && <div style={{ color: 'red', marginBottom: '20px' }}>{error}</div>}
       {loading ? (
         <div>Cargando inventario...</div>
       ) : (
-        <InventoryList 
-          inventory={inventory}
-          onEdit={handleEdit}
-          onAdjust={handleAdjust}
-        />
+        <InventoryList inventory={inventory} onEdit={setSelectedItem} />
       )}
-
       {selectedItem && (
         <EditItemForm 
-          item={selectedItem}
-          onEdit={handleEditComplete}
-          onCancel={() => setSelectedItem(null)}
+          item={selectedItem} 
+          onEdit={() => {
+            setSelectedItem(null);
+            loadInventory();
+          }} 
         />
       )}
     </div>
+  );
+
+  return (
+    <Routes>
+      <Route path="/login" element={
+        !isAuthenticated ? (
+          <Login onLogin={checkAuth} />
+        ) : (
+          <Navigate to="/" replace />
+        )
+      } />
+      <Route path="/register" element={
+        !isAuthenticated ? (
+          <RegisterForm />
+        ) : (
+          <Navigate to="/" replace />
+        )
+      } />
+      <Route path="/" element={
+        isAuthenticated ? (
+          <AuthContent />
+        ) : (
+          <Navigate to="/login" replace />
+        )
+      } />
+    </Routes>
   );
 }
 

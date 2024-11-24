@@ -42,6 +42,14 @@ api.interceptors.response.use(
   }
 );
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const getInventory = () => api.get('/inventory');
 export const addItem = (data) => api.post('/inventory', data);
 export const editItem = (id, data) => api.put(`/inventory/${id}`, data);
