@@ -1,169 +1,156 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
-const RegisterForm = () => {
+function RegisterForm() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    doc_number: "",
-    name: "",
-    last_name: "",
-    user_type: "",
-    email: "",
-    password: "",
+    doc_number: '',
+    name: '',
+    last_name: '',
+    email: '',
+    password: '',
+    id_rol: ''
   });
-  const [error, setError] = useState(null);
+  const [roles, setRoles] = useState([]);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(''); // Nuevo estado para mensaje de éxito
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/roles');
+        const data = await response.json();
+        setRoles(data);
+      } catch (err) {
+        console.error('Error al obtener roles:', err);
+      }
+    };
+    fetchRoles();
+  }, []);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(null);
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-
     try {
-      const registerResponse = await fetch("http://localhost:5000/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+      const response = await fetch('http://localhost:5000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
       });
 
-      const registerResult = await registerResponse.json();
+      const data = await response.json();
 
-      if (registerResponse.ok) {
-        // Intento de inicio de sesión automático
-        const loginResponse = await fetch("http://localhost:5000/api/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
-        });
-
-        const loginResult = await loginResponse.json();
-
-        if (loginResponse.ok) {
-          localStorage.setItem('token', loginResult.token);
-          alert("Usuario registrado e iniciado sesión correctamente");
-          navigate('/');
-        } else {
-          alert("Usuario registrado correctamente. Por favor, inicie sesión.");
+      if (response.ok) {
+        // Establece mensaje de éxito
+        setSuccess('¡Usuario registrado correctamente!');
+        
+        // Redirige después de 2 segundos
+        setTimeout(() => {
           navigate('/login');
-        }
+        }, 2000);
       } else {
-        setError(`Error: ${registerResult.error}${registerResult.details ? ` - ${registerResult.details}` : ''}`);
+        setError(data.error || 'Error al registrar usuario');
       }
     } catch (err) {
-      console.error("Error completo:", err);
-      setError(`Error de conexión: ${err.message}`);
+      console.error('Error al registrar usuario:', err);
+      setError('Error de conexión al servidor');
     }
   };
 
   return (
-    <div className="register-form-container" style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
-      <h2>Registro de Usuario</h2>
+    <div style={{ maxWidth: '500px', margin: '50px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Registro de Usuario</h2>
+      
+      {/* Mensaje de éxito */}
+      {success && (
+        <div style={{ 
+          backgroundColor: '#dff0d8', 
+          color: '#3c763d', 
+          padding: '10px', 
+          marginBottom: '15px', 
+          borderRadius: '4px',
+          textAlign: 'center'
+        }}>
+          {success}
+        </div>
+      )}
+
+      {/* Mensaje de error */}
       {error && (
         <div style={{ 
           color: 'red', 
-          padding: '10px', 
-          marginBottom: '10px',
-          border: '1px solid red',
-          borderRadius: '4px',
-          backgroundColor: '#fff5f5'
+          marginBottom: '10px', 
+          textAlign: 'center',
+          backgroundColor: '#f8d7da',
+          padding: '10px',
+          borderRadius: '4px'
         }}>
           {error}
         </div>
       )}
-      <form onSubmit={handleSubmit} style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        gap: '10px' 
-      }}>
-        <input
-          type="text"
-          name="doc_number"
-          placeholder="Número de Documento"
-          value={formData.doc_number}
-          onChange={handleChange}
-          required
-          style={{ padding: '8px', marginTop: '5px' }}
-        />
-        <input
-          type="text"
-          name="name"
-          placeholder="Nombre"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          style={{ padding: '8px', marginTop: '5px' }}
-        />
-        <input
-          type="text"
-          name="last_name"
-          placeholder="Apellido"
-          value={formData.last_name}
-          onChange={handleChange}
-          required
-          style={{ padding: '8px', marginTop: '5px' }}
-        />
-        <select
-          name="user_type"
-          value={formData.user_type}
-          onChange={handleChange}
-          required
-          style={{ padding: '8px', marginTop: '5px' }}
-        >
-          <option value="">Selecciona el tipo de usuario</option>
-          <option value="admin">Admin</option>
-          <option value="supervisor">Supervisor</option>
-          <option value="operator">Operador</option>
-          <option value="consultant">Consultor</option>
-        </select>
-        <input
-          type="email"
-          name="email"
-          placeholder="Correo Electrónico"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          style={{ padding: '8px', marginTop: '5px' }}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Contraseña"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          style={{ padding: '8px', marginTop: '5px' }}
-        />
+
+      <form onSubmit={handleSubmit}>
+        {['doc_number', 'name', 'last_name', 'email', 'password'].map((field) => (
+          <div key={field} style={{ marginBottom: '15px' }}>
+            <label htmlFor={field} style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              {field === 'doc_number' ? 'Número de Documento' : field.charAt(0).toUpperCase() + field.slice(1)}:
+            </label>
+            <input
+              id={field}
+              name={field}
+              type={field === 'password' ? 'password' : 'text'}
+              value={formData[field]}
+              onChange={handleChange}
+              required
+              style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ddd' }}
+            />
+          </div>
+        ))}
+        <div style={{ marginBottom: '15px' }}>
+          <label htmlFor="id_rol" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Rol:</label>
+          <select
+            id="id_rol"
+            name="id_rol"
+            value={formData.id_rol}
+            onChange={handleChange}
+            required
+            style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ddd' }}
+          >
+            <option value="">Selecciona un rol</option>
+            {roles.map((role) => (
+              <option key={role.id} value={role.id}>{role.name}</option>
+            ))}
+          </select>
+        </div>
         <button 
-          type="submit"
-          style={{
-            padding: '10px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            marginTop: '10px'
+          type="submit" 
+          style={{ 
+            width: '100%', 
+            padding: '10px', 
+            backgroundColor: '#28a745', 
+            color: '#fff', 
+            border: 'none', 
+            borderRadius: '4px', 
+            fontSize: '16px', 
+            cursor: 'pointer' 
           }}
         >
-          Registrar
+          Registrarse
         </button>
       </form>
-      <div style={{ marginTop: '20px', textAlign: 'center' }}>
-        <Link to="/login" style={{ 
-          textDecoration: 'none', 
-          color: '#007bff' 
-        }}>
-          ¿Ya tienes una cuenta? Inicia sesión
-        </Link>
+      <div style={{ marginTop: '15px', textAlign: 'center' }}>
+        <p style={{ margin: '0' }}>¿Ya tienes una cuenta? <Link to="/login" style={{ color: '#007bff', textDecoration: 'none' }}>Inicia sesión aquí</Link></p>
       </div>
     </div>
   );
-};
+}
 
 export default RegisterForm;

@@ -1,11 +1,33 @@
 import axios from 'axios';
 
+const API_BASE_URL = 'http://localhost:5000';
+
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json'
   }
 });
+
+export const fetchData = async (endpoint) => {
+  try {
+    const response = await api.get(`/${endpoint}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+};
+
+export const createData = async (endpoint, data) => {
+  try {
+    const response = await api.post(`/${endpoint}`, data);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating data:', error);
+    throw error;
+  }
+};
 
 // Interceptor para logs de request
 api.interceptors.request.use(
@@ -42,6 +64,7 @@ api.interceptors.response.use(
   }
 );
 
+// Interceptor para añadir token de autorización
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -49,10 +72,5 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
-
-export const getInventory = () => api.get('/inventory');
-export const addItem = (data) => api.post('/inventory', data);
-export const editItem = (id, data) => api.put(`/inventory/${id}`, data);
-export const adjustQuantity = (id, data) => api.put(`/inventory/quantity/${id}`, data);
 
 export default api;
