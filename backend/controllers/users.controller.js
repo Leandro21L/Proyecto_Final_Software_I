@@ -95,3 +95,16 @@ export const updateUser = (req, res) => {
 export const deleteUser = (req, res) => {
     res.send('eliminando usuario')
 };
+
+export const getRoles = async (req, res) => {
+    try {
+        const [result] = await pool.query('SELECT id, name FROM roles');
+        res.json(result);
+    } catch (error) {
+        console.error('Error al obtener roles:', error);
+        return res.status(500).json({
+            error: 'Error al obtener roles',
+            details: error.message
+        });
+    };
+}

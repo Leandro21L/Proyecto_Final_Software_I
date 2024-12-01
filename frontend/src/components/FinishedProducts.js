@@ -7,11 +7,11 @@ const FinishedProducts = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetchData('finished_products').then(setProducts);
+    fetchData('products').then(setProducts);
   }, []);
 
   const handleAddProduct = (newProduct) => {
-    createData('finished_products', newProduct).then((product) => {
+    createData('products', newProduct).then((product) => {
       setProducts([...products, product]);
     });
   };

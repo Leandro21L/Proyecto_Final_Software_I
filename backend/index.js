@@ -14,10 +14,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(userRoutes);
-app.use(authRoutes);
-app.use(materialRoutes);
-app.use(productRoutes);
+app.use("/api", userRoutes);
+app.use("/api", authRoutes);
+app.use("/api", materialRoutes);
+app.use("/api", productRoutes);
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];

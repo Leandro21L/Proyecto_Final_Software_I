@@ -7,11 +7,11 @@ const RawMaterials = () => {
   const [materials, setMaterials] = useState([]);
 
   useEffect(() => {
-    fetchData('raw_materials').then(setMaterials);
+    fetchData('materials').then(setMaterials);
   }, []);
 
   const handleAddMaterial = (newMaterial) => {
-    createData('raw_materials', newMaterial).then((material) => {
+    createData('materials', newMaterial).then((material) => {
       setMaterials([...materials, material]);
     });
   };

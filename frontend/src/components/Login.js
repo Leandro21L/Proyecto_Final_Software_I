@@ -88,7 +88,7 @@ function Login({ onLogin }) {
         </button>
       </form>
       <div style={{ marginTop: '15px', textAlign: 'center' }}>
-        <p style={{ margin: '0' }}>¿No tienes una cuenta? <Link to="/register" style={{ color: '#007bff', textDecoration: 'none' }}>Regístrate aquí</Link></p>
+        <p style={{ margin: '0' }}>¿No tienes una cuenta? <Link to="/users/register" style={{ color: '#007bff', textDecoration: 'none' }}>Regístrate aquí</Link></p>
       </div>
     </div>
   );

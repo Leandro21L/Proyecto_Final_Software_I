@@ -29,15 +29,15 @@ const App = () => {
       
       <Routes>
         <Route path="/login" element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to="/" />} />
-        <Route path="/register" element={!isAuthenticated ? <RegisterForm /> : <Navigate to="/" />} />
+        <Route path="/users/register" element={!isAuthenticated ? <RegisterForm /> : <Navigate to="/" />} />
         
         {isAuthenticated ? (
           <>
-            <Route path="/finished-products" element={<FinishedProducts />} />
+            <Route path="/products" element={<FinishedProducts />} />
             <Route path="/inventory-movements" element={<InventoryMovements />} />
-            <Route path="/raw-materials" element={<RawMaterials />} />
+            <Route path="/materials" element={<RawMaterials />} />
             <Route path="/products-materials" element={<ProductsMaterials />} />
-            <Route path="/" element={<Navigate to="/finished-products" />} />
+            <Route path="/" element={<Navigate to="/products" />} />
           </>
         ) : (
           <Route path="*" element={<Navigate to="/login" />} />

@@ -8,10 +8,10 @@ import {
     deleteMaterial
 } from '../controllers/rawMaterials.controller.js';
 
-router.post('/Material/create', createMaterial);
-router.get('/Material', getMaterials);
-router.get('/Material/:id', getMaterial);
-router.put('/Material/:id', updateMaterial);
-router.delete('/Material/:id', deleteMaterial);
+router.post('/Materials/create', createMaterial);
+router.get('/Materials', getMaterials);
+router.get('/Materials/:id', getMaterial);
+router.put('/Materials/:id', updateMaterial);
+router.delete('/Materials/:id', deleteMaterial);
 
 export default router;
