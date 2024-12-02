@@ -27,7 +27,7 @@ const RawMaterials = () => {
 
       if (material.current_quantity <= material.min_quantity) {
         setNotifications([
-          ...notifications, 
+          ...notifications,
           `Nueva materia prima "${material.name}" está por debajo de la cantidad mínima (${material.current_quantity} ${material.measurement_unit})`
         ]);
       }
@@ -49,10 +49,12 @@ const RawMaterials = () => {
         ]}
         onSubmit={handleAddMaterial}
       />
-      <DataTable
-        columns={['Id', 'Nombre', 'Descripción', 'Cantidad actual', 'Cantidad mínima', 'Cantidad máxima', 'Unidad medida']}
-        data={materials}
-      />
+      {materials.length > 0 &&
+        <DataTable
+          columns={['id', 'name', 'description', 'current_quantity', 'min_quantity', 'max_quantity', 'measurement_unit']}
+          data={materials}
+        />
+      }
     </div>
   );
 };

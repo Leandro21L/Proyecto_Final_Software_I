@@ -27,7 +27,7 @@ const FinishedProducts = () => {
 
       if (product.current_quantity <= product.min_quantity) {
         setNotifications([
-          ...notifications, 
+          ...notifications,
           `Nuevo producto "${product.name}" está por debajo de la cantidad mínima (${product.current_quantity})`
         ]);
       }
@@ -50,7 +50,7 @@ const FinishedProducts = () => {
       />
       {products.length > 0 &&
         <DataTable
-          columns={['Id', 'Nombre', 'Descripción', 'Cantidad actual', 'Cantidad mínima', 'Cantidad máxima']}
+          columns={['id', 'name', 'description', 'current_quantity', 'min_quantity', 'max_quantity']}
           data={products}
         />
       }

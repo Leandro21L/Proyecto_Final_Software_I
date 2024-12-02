@@ -6,13 +6,17 @@ import Form from './Shared/Form';
 const InventoryMovements = () => {
   const [movements, setMovements] = useState([]);
 
+  const getData = () => {
+    fetchData('api/inventory').then(setMovements);
+  }
+
   useEffect(() => {
-    fetchData('inventory_movements').then(setMovements);
+    getData();
   }, []);
 
   const handleAddMovement = (newMovement) => {
-    createData('inventory_movements', newMovement).then((movement) => {
-      setMovements([...movements, movement]);
+    createData('api/inventory/movement', newMovement).then(() => {
+      getData();
     });
   };
 
@@ -29,10 +33,12 @@ const InventoryMovements = () => {
         ]}
         onSubmit={handleAddMovement}
       />
-      <DataTable
-        columns={['Id', 'Id material', 'Id producto', 'Tipo de movimiento', 'Cantidad', 'Fecha', 'Descripción']}
-        data={movements}
-      />
+      {movements.length > 0 &&
+        <DataTable
+          columns={['id', 'id_material', 'id_product', 'movement_type', 'quantity', 'date', 'description']}
+          data={movements}
+        />
+      }
     </div>
   );
 };

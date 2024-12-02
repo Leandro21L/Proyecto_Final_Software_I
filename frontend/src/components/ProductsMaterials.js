@@ -6,13 +6,17 @@ import Form from './Shared/Form';
 const ProductsMaterials = () => {
   const [relations, setRelations] = useState([]);
 
+  const getData = () => {
+    fetchData('api/products-materials').then(setRelations);
+  }
+
   useEffect(() => {
-    fetchData('products_materials').then(setRelations);
+    getData();
   }, []);
 
   const handleAddRelation = (newRelation) => {
-    createData('products_materials', newRelation).then((relation) => {
-      setRelations([...relations, relation]);
+    createData('api/products-materials/create', newRelation).then(() => {
+      getData();
     });
   };
 
@@ -27,10 +31,12 @@ const ProductsMaterials = () => {
         ]}
         onSubmit={handleAddRelation}
       />
-      <DataTable
-        columns={['Id material', 'Id producto', 'Materiales usados']}
-        data={relations}
-      />
+      {relations.length > 0 &&
+        <DataTable
+          columns={['id_material', 'id_product', 'materials_used']}
+          data={relations}
+        />
+      }
     </div>
   );
 };

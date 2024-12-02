@@ -35,10 +35,14 @@ const Reports = () => {
     const fetchInventoryData = async () => {
       try {
         const [materials, movements, products] = await Promise.all([
-          fetchData('materials'),
-          fetchData('inventory_movements'),
-          fetchData('products')
+          fetchData('api/materials'),
+          fetchData('api/inventory'),
+          fetchData('api/products')
         ]);
+
+        console.log('Materials:', materials);
+      console.log('Movements:', movements);
+      console.log('Products:', products);
 
         const data = { materials, movements, products };
         setInventoryData(data);
