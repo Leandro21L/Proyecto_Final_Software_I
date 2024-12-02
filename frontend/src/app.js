@@ -7,6 +7,9 @@ import RawMaterials from './components/RawMaterials';
 import ProductsMaterials from './components/ProductsMaterials';
 import Login from './components/Login';
 import RegisterForm from './components/RegisterForm';
+import './styles/app.css';
+import './styles/Notifications.css';
+
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
