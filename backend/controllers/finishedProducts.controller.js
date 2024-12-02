@@ -1,9 +1,8 @@
 import { pool } from "../db.js";
 
 export const createProduct = async (req, res) => {
-    const { name, description, current_quantity, min_quantity, max_quantity } = req.body;
-
     try {
+        const { name, description, current_quantity, min_quantity, max_quantity } = req.body;
         const [result] = await pool.query(
             `INSERT INTO finished_products(name, description, current_quantity, min_quantity, max_quantity) 
                 VALUES (?, ?, ?, ?, ?)`,

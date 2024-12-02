@@ -11,7 +11,7 @@ const DataTable = ({ columns, data }) => {
     if (!searchValue) {
       setFilteredData(data);
     } else {
-      const filtered = data.filter(row => 
+      const filtered = data.filter(row =>
         row.id && row.id.toString().includes(searchValue)
       );
       setFilteredData(filtered);
@@ -22,14 +22,14 @@ const DataTable = ({ columns, data }) => {
     <div>
       <div style={{ marginBottom: '10px' }}>
         <label>Buscar por ID: </label>
-        <input 
-          type="text" 
+        <input
+          type="text"
           value={searchId}
           onChange={handleSearch}
           placeholder="Ingrese ID"
         />
       </div>
-      <table>
+      <table border="1" cellPadding="5" style={{ borderCollapse: 'collapse', width: '100%' }}>
         <thead>
           <tr>
             {columns.map((col) => (
@@ -41,7 +41,7 @@ const DataTable = ({ columns, data }) => {
           {filteredData.map((row, idx) => (
             <tr key={idx}>
               {columns.map((col) => (
-                <td key={col}>{row[col]}</td>
+                <td key={col}>{row[col] || 'N/A'}</td>
               ))}
             </tr>
           ))}

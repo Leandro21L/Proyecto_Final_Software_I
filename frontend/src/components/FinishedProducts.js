@@ -2,30 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { fetchData, createData } from '../services/api';
 import DataTable from './Shared/DataTable';
 import Form from './Shared/Form';
-import Notifications from './Notifications';
+import Notifications from './Notifications.js';
 
 const FinishedProducts = () => {
   const [products, setProducts] = useState([]);
   const [notifications, setNotifications] = useState([]);
 
-  useEffect(() => {
-    fetchData('finished_products').then(data => {
-      setProducts(data);
-      // Revisar productos con cantidad baja
-      const lowQuantityNotifications = data
-        .filter(product => product.current_quantity <= product.min_quantity)
-        .map(product => `Producto "${product.name}" está por debajo de la cantidad mínima (${product.current_quantity})`);
-      
+  const getData = () => {
+    fetchData('api/products').then((product) => {
+      setProducts(product)
+      const lowQuantityNotifications = product.filter(product => product.current_quantity <= product.min_quantity).map(product => `Producto "${product.name}" está por debajo de la cantidad mínima (${product.current_quantity})`);
       setNotifications(lowQuantityNotifications);
     });
+  }
+  useEffect(() => {
+    getData();
   }, []);
 
   const handleAddProduct = (newProduct) => {
-    createData('finished_products', newProduct).then((product) => {
-      const updatedProducts = [...products, product];
-      setProducts(updatedProducts);
+    createData('api/products/create', newProduct).then(() => {
+      getData();
 
-      // Revisar si el nuevo producto está por debajo de la cantidad mínima
       if (product.current_quantity <= product.min_quantity) {
         setNotifications([
           ...notifications, 
@@ -49,10 +46,12 @@ const FinishedProducts = () => {
         ]}
         onSubmit={handleAddProduct}
       />
-      <DataTable
-        columns={['id', 'name', 'description', 'current_quantity', 'min_quantity', 'max_quantity']}
-        data={products}
-      />
+      {products.length > 0 &&
+        <DataTable
+          columns={['id', 'name', 'description', 'current_quantity', 'min_quantity', 'max_quantity']}
+          data={products}
+        />
+      }
     </div>
   );
 };
