@@ -34,8 +34,18 @@ export const getMaterials = async (req, res) => {
         }
 };
 
-export const getMaterial = (req, res) => {
-    res.send('obteniendo material');
+export const getMaterial = async (req, res) => {
+    try {
+        const [result] = await pool.query(
+            'SELECT * FROM raw_materials WHERE id = ?', [
+            req.params.id
+        ]);
+        if (result.length === 0)
+            return res.status(404).json({message: error.message});
+        res.json(result[0]);
+    } catch (error) {
+        return res.status(500).json({message: error.message});
+    }
 };
 
 export const updateMaterial = async (req, res) => {

@@ -3,7 +3,7 @@ const router = express.Router();
 import {
     createMaterial, 
     getMaterials, 
-    getMaterial, 
+    getMaterial,
     updateMaterial, 
     deleteMaterial
 } from '../controllers/rawMaterials.controller.js';

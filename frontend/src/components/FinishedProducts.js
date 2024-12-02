@@ -11,7 +11,9 @@ const FinishedProducts = () => {
   const getData = () => {
     fetchData('api/products').then((product) => {
       setProducts(product)
-      const lowQuantityNotifications = product.filter(product => product.current_quantity <= product.min_quantity).map(product => `Producto "${product.name}" está por debajo de la cantidad mínima (${product.current_quantity})`);
+      const lowQuantityNotifications = product
+        .filter(product => product.current_quantity <= product.min_quantity)
+        .map(product => `Producto "${product.name}" está por debajo de la cantidad mínima (${product.current_quantity})`);
       setNotifications(lowQuantityNotifications);
     });
   }
