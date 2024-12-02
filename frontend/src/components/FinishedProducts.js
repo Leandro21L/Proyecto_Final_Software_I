@@ -25,7 +25,7 @@ const FinishedProducts = () => {
     createData('api/products/create', newProduct).then(() => {
       getData();
 
-      if (product.current_quantity <= product.min_quantity) {
+      if (newProduct.current_quantity <= newProduct.min_quantity) {
         setNotifications([
           ...notifications,
           `Nuevo producto "${product.name}" está por debajo de la cantidad mínima (${product.current_quantity})`

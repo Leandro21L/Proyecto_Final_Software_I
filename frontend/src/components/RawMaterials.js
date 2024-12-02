@@ -25,7 +25,7 @@ const RawMaterials = () => {
     createData('api/materials/create', newMaterial).then(() => {
       getData();
 
-      if (material.current_quantity <= material.min_quantity) {
+      if (newMaterial.current_quantity <= newMaterial.min_quantity) {
         setNotifications([
           ...notifications,
           `Nueva materia prima "${material.name}" está por debajo de la cantidad mínima (${material.current_quantity} ${material.measurement_unit})`

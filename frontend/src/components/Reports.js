@@ -245,32 +245,6 @@ const Reports = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Materiales Críticos */}
-        <div className="report-section">
-          <h2>Materiales en Estado Crítico</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={reportAnalytics.criticalMaterials}
-                dataKey="stockPercentage"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={80}
-                label
-              >
-                {reportAnalytics.criticalMaterials.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={`hsl(${index * 360 / reportAnalytics.criticalMaterials.length}, 70%, 50%)`} 
-                  />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
         {/* Eficiencia de Producción */}
         <div className="report-section">
           <h2>Eficiencia de Producción</h2>
