@@ -74,14 +74,6 @@ export const createUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
     res.send('obteniendo usuarios');
-    /*try {
-        const [result] = await pool.query(
-            'SELECT * FROM users ORDER BY id_rol ASC'
-        );
-        res.json(result);
-    } catch (error) {
-        
-    }*/
 };
 
 export const getUser = (req, res) => {
