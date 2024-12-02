@@ -48,7 +48,7 @@ const FinishedProducts = () => {
       />
       {products.length > 0 &&
         <DataTable
-          columns={['id', 'name', 'description', 'current_quantity', 'min_quantity', 'max_quantity']}
+          columns={['Id', 'Nombre', 'Descripción', 'Cantidad actual', 'Cantidad mínima', 'Cantidad máxima']}
           data={products}
         />
       }

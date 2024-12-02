@@ -30,7 +30,7 @@ const InventoryMovements = () => {
         onSubmit={handleAddMovement}
       />
       <DataTable
-        columns={['id', 'id_material', 'id_product', 'movement_type', 'quantity', 'date', 'description']}
+        columns={['Id', 'Id material', 'Id producto', 'Tipo de movimiento', 'Cantidad', 'Fecha', 'Descripción']}
         data={movements}
       />
     </div>

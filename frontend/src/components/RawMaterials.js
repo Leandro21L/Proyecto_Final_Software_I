@@ -50,7 +50,7 @@ const RawMaterials = () => {
         onSubmit={handleAddMaterial}
       />
       <DataTable
-        columns={['id', 'name', 'description', 'current_quantity', 'min_quantity', 'max_quantity', 'measurement_unit']}
+        columns={['Id', 'Nombre', 'Descripción', 'Cantidad actual', 'Cantidad mínima', 'Cantidad máxima', 'Unidad medida']}
         data={materials}
       />
     </div>

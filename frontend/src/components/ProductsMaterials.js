@@ -28,7 +28,7 @@ const ProductsMaterials = () => {
         onSubmit={handleAddRelation}
       />
       <DataTable
-        columns={['id_material', 'id_product', 'materials_used']}
+        columns={['Id material', 'Id producto', 'Materiales usados']}
         data={relations}
       />
     </div>
