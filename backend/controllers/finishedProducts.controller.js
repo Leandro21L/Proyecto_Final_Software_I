@@ -22,18 +22,46 @@ export const createProduct = async (req, res) => {
     }
 };
 
-export const getProducts = (req, res) => {
-    res.send('obteniendo productos');
+export const getProducts = async (req, res) => {
+    try {
+        const [products] = await pool.query(
+            'SELECT * FROM finished_products'
+        );
+        res.json(products);
+    } catch (error) {
+        return res.status(500).json({message: error.message});
+    }
 };
 
 export const getProduct = (req, res) => {
     res.send('obteniendo producto');
 };
 
-export const updateProduct = (req, res) => {
-    res.send('actualizando producto');
-}
+export const updateProduct = async (req, res) => {
+    try {
+        const result = await pool.query(
+            'UPDATE finished_products SET ? WHERE id = ?', [
+            req.body,
+            req.params.id
+        ]);
+        res.json(result);
+    } catch (error) {
+       return res.status(500).json({message: error.message}); 
+    }
+};
 
-export const deleteProduct = (req, res) => {
-    res.send('eliminando producto');
-}
+export const deleteProduct = async (req, res) => {
+    try {
+        const [result] = await pool.query(
+            'DELETE FROM finished_products WHERE id  = ?', [
+                req.params.id
+        ]);
+
+        if (result.affectedRows === 0)
+            return res.status(404).json({message: "Producto no encontrado"});
+
+        return res.sendStatus(204);
+    } catch (error) {
+        return res.status(500).json({message: error.message});
+    }
+};

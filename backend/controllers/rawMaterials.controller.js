@@ -23,18 +23,46 @@ export const createMaterial = async (req, res) => {
     }
 };
 
-export const getMaterials = (req, res) => {
-    res.send('obteniendo materiales');
+export const getMaterials = async (req, res) => {
+        try {
+            const [products] = await pool.query(
+                'SELECT * FROM raw_materials'
+            );
+            res.json(products);
+        } catch (error) {
+            res.status(500).json({message: error.message});
+        }
 };
 
 export const getMaterial = (req, res) => {
     res.send('obteniendo material');
 };
 
-export const updateMaterial = (req, res) => {
-    res.send('actualizando material');
-}
+export const updateMaterial = async (req, res) => {
+    try {
+        const result = await pool.query(
+            'UPDATE raw_materials SET ? WHERE id = ?', [
+            req.body,
+            req.params.id
+        ]);
+        res.json(result);
+    } catch (error) {
+       return res.status(500).json({message: error.message}); 
+    }
+};
 
-export const deleteMaterial = (req, res) => {
-    res.send('eliminando material');
-}
+export const deleteMaterial = async (req, res) => {
+    try {
+        const [result] = await pool.query(
+            'DELETE FROM raw_materials WHERE id  = ?', [
+                req.params.id
+        ]);
+
+        if (result.affectedRows === 0)
+            return res.status(404).json({message: "Producto no encontrado"});
+
+        return res.sendStatus(204);
+    } catch (error) {
+        return res.status(500).json({message: error.message});
+    }
+};
