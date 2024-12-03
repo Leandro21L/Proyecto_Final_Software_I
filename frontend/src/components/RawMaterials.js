@@ -10,25 +10,32 @@ const RawMaterials = () => {
 
   const getData = () => {
     fetchData('api/materials').then((material) => {
-      setMaterials(material)
+      setMaterials(material);
       const lowQuantityNotifications = material
-        .filter(material => material.current_quantity <= material.min_quantity)
-        .map(material => `Materia prima "${material.description}" está por debajo de la cantidad mínima (${material.current_quantity} ${material.measurement_unit})`);
+        .filter(mat => Number(mat.current_quantity) <= Number(mat.min_quantity))
+        .map(mat => 
+          `Materia prima "${mat.description}" está por debajo de la cantidad mínima (${mat.current_quantity} ${mat.measurement_unit})`
+        );
       setNotifications(lowQuantityNotifications);
     });
-  }
+  };
+
   useEffect(() => {
     getData();
   }, []);
 
   const handleAddMaterial = (newMaterial) => {
+    // Convertir valores a números
+    const currentQuantity = Number(newMaterial.current_quantity);
+    const minQuantity = Number(newMaterial.min_quantity);
+
     createData('api/materials/create', newMaterial).then(() => {
       getData();
 
-      if (newMaterial.current_quantity <= newMaterial.min_quantity) {
-        setNotifications([
-          ...notifications,
-          `Nueva materia prima "${material.name}" está por debajo de la cantidad mínima (${material.current_quantity} ${material.measurement_unit})`
+      if (currentQuantity <= minQuantity) {
+        setNotifications(prevNotifications => [
+          ...prevNotifications,
+          `Nueva materia prima "${newMaterial.description}" está por debajo de la cantidad mínima (${currentQuantity} ${newMaterial.measurement_unit})`
         ]);
       }
     });

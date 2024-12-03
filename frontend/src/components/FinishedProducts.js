@@ -10,25 +10,30 @@ const FinishedProducts = () => {
 
   const getData = () => {
     fetchData('api/products').then((product) => {
-      setProducts(product)
+      setProducts(product);
       const lowQuantityNotifications = product
-        .filter(product => product.current_quantity <= product.min_quantity)
-        .map(product => `Producto "${product.name}" está por debajo de la cantidad mínima (${product.current_quantity})`);
+        .filter(prod => Number(prod.current_quantity) <= Number(prod.min_quantity))
+        .map(prod => `Producto "${prod.name}" está por debajo de la cantidad mínima (${prod.current_quantity})`);
       setNotifications(lowQuantityNotifications);
     });
-  }
+  };
+
   useEffect(() => {
     getData();
   }, []);
 
   const handleAddProduct = (newProduct) => {
+    // Convertir valores a números
+    const currentQuantity = Number(newProduct.current_quantity);
+    const minQuantity = Number(newProduct.min_quantity);
+
     createData('api/products/create', newProduct).then(() => {
       getData();
 
-      if (newProduct.current_quantity <= newProduct.min_quantity) {
-        setNotifications([
-          ...notifications,
-          `Nuevo producto "${product.name}" está por debajo de la cantidad mínima (${product.current_quantity})`
+      if (currentQuantity <= minQuantity) {
+        setNotifications(prevNotifications => [
+          ...prevNotifications,
+          `Nuevo producto "${newProduct.name}" está por debajo de la cantidad mínima (${currentQuantity})`
         ]);
       }
     });
