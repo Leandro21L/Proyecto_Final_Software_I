@@ -31,6 +31,8 @@ function Login({ onLogin }) {
 
       if (response.ok) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('userId', data.id_usuario);
+        console.log(localStorage.getItem('userId'));
         onLogin();
         navigate('/');
       } else {

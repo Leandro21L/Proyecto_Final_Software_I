@@ -5,17 +5,18 @@ import Form from './Shared/Form';
 
 const InventoryMovements = () => {
   const [movements, setMovements] = useState([]);
-  const userId = localStorage.getItem('userId')
-
+  
   const getData = () => {
     fetchData('api/inventory').then(setMovements);
   }
-
+  
   useEffect(() => {
     getData();
   }, []);
-
+  
   const handleAddMovement = (newMovement) => {
+    const userId = localStorage.getItem('userId');
+    
     if (!userId){
       console.error('Usuario no logueado');
       return;
@@ -25,6 +26,9 @@ const InventoryMovements = () => {
 
     createData('api/inventory/movement', movementWhitUser).then(() => {
       getData();
+    })
+    .catch((error) => {
+      console.error('Error al crear movimiento', error);
     });
   };
 
